@@ -1,8 +1,7 @@
 package net.simple.forscore.plugin.command;
 import com.google.common.collect.Lists;
 import net.simple.forscore.plugin.Main;
-import net.simple.forscore.plugin.advancements.Achievements;
-import net.simple.forscore.plugin.event.Fireballspawn;
+//import net.simple.forscore.plugin.event.Fireballspawn;
 import net.simple.forscore.plugin.event.Other;
 import net.simple.forscore.plugin.raidfix.RaidFix;
 import org.bukkit.Bukkit;
@@ -13,7 +12,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import ru.mrbrikster.chatty.json.JsonMessagePart;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +25,7 @@ public class FScommand extends AbstractCommand {
     }
     private final Main plugin;
     HashMap<String, Integer> eventM = new HashMap<String, Integer>();
-    Fireballspawn fireballspawn = new Fireballspawn();
+//    Fireballspawn fireballspawn = new Fireballspawn();
     public String[] getAdvArray(){
         String[] advArray = new String[29];
         advArray[0] = "start";
@@ -70,7 +68,7 @@ public class FScommand extends AbstractCommand {
         }
 
         if (args[0].equalsIgnoreCase("fixadv")) fixadv(sender, label, args);
-        else if (args[0].equalsIgnoreCase("cooldown")) sender.sendMessage(cooldown(sender, label, args));
+//        else if (args[0].equalsIgnoreCase("cooldown")) sender.sendMessage(cooldown(sender, label, args));
         else if (args[0].equalsIgnoreCase("progress")) sender.sendMessage(progress(sender, label, args));
         else if (args[0].equalsIgnoreCase("getop")) getop(sender, label, args);
         else if (args[0].equalsIgnoreCase("event")) event(sender, label, args);
@@ -129,21 +127,10 @@ public class FScommand extends AbstractCommand {
     public void eventMap(CommandSender sender, String label, String[] args){
         eventM.clear();
         if(args.length<3) return;
-        if(args[1].equalsIgnoreCase("firerain")) {
-            if(args[2].equalsIgnoreCase("start")) {eventM.put("firerain-on",0); return;}
-            if(args[2].equalsIgnoreCase("stop")) {eventM.put("firerain-off",0); return;}
-            if(args[2].equalsIgnoreCase("restart")) {eventM.put("firerain-restart",0); return;}
-        }
         if(args[1].equalsIgnoreCase("other")) {
             if(args[2].equalsIgnoreCase("start")) {eventM.put("other-on",0); return;}
             if(args[2].equalsIgnoreCase("stop")) {eventM.put("other-off",0); return;}
         }
-        if(args.length<4) return;
-        if(args[2].equalsIgnoreCase("setradius")) {eventM.put("setradius",Integer.parseInt(args[3])); return;}
-        if(args[2].equalsIgnoreCase("sety")) {eventM.put("sety",Integer.parseInt(args[3])); return;}
-        if(args[2].equalsIgnoreCase("setperiod")) {eventM.put("setperiod",Integer.parseInt(args[3])); return;}
-        if(args[2].equalsIgnoreCase("setExplosionPower")) {eventM.put("setExplosionPower",Integer.parseInt(args[3])); return;}
-        if(args[2].equalsIgnoreCase("maxMobs")) {eventM.put("maxMobs",Integer.parseInt(args[3])); return;}
     }
 
     public void event(CommandSender sender, String label, String[] args){
@@ -160,36 +147,6 @@ public class FScommand extends AbstractCommand {
         }
         File configFile = new File(plugin.getDataFolder() + File.separator + "/event/config.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-
-        if(eventM.containsKey("firerain-on")){
-            if(config.getBoolean("fs.fireRain")) {
-                sender.sendMessage("§cДождь из файерболов уже включен");
-            }
-            else{
-                config.set("fs.fireRain",true);
-                Achievements.fe = true;
-                fireballspawn.spawn();
-                sender.sendMessage("§2Дождь из файерболов успешно активирован!");
-            }
-        }
-        if(eventM.containsKey("firerain-off")) {
-            if(config.getBoolean("fs.fireRain")) {
-                config.set("fs.fireRain",false);
-                Bukkit.getScheduler().cancelTasks(plugin);
-                Achievements.fe = false;
-                sender.sendMessage("§2Дождь из файерболов успешно выключен!");
-            }
-            else{
-                sender.sendMessage("§cДождь из файерболов уже выключен");
-            }
-        }
-        if(eventM.containsKey("firerain-restart")){
-            config.set("fs.fireRain",true);
-            Bukkit.getScheduler().cancelTasks(plugin);
-            Achievements.fe = true;
-            fireballspawn.spawn();
-            sender.sendMessage("§2Дождь из файерболов успешно перезапущен!");
-        }
         if(eventM.containsKey("other-on")) {
             if(config.getBoolean("fs.other.enabled")) return;
             config.set("fs.other.enabled", true);
@@ -205,26 +162,6 @@ public class FScommand extends AbstractCommand {
                 sender.sendMessage("(Что-то) Успешно отключено, но требуется перезапуск сервера");
             }
             else sender.sendMessage("(Что-то) И так выключено");
-        }
-        if(eventM.containsKey("setradius")){
-            config.set("fs.radius",eventM.get("setradius"));
-            sender.sendMessage("Задан радиус призыва файерболов вокруг игрока: "+ eventM.get("setradius")+", базовый радиус: 100");
-        }
-        if(eventM.containsKey("sety")){
-            config.set("fs.y",eventM.get("sety"));
-            sender.sendMessage("Задан y: "+ eventM.get("sety")+", базовый y: 300");
-        }
-        if(eventM.containsKey("setperiod")) {
-            config.set("fs.period",Integer.parseInt(args[3]));
-            sender.sendMessage("Задана задержка (в тиках) при призыве файерболов: "+ Integer.parseInt(args[3])+", базовая задержка: 500 тиков");
-        }
-        if(eventM.containsKey("setExplosionPower")){
-            config.set("fs.explosionPower",Integer.parseInt(args[3]));
-            sender.sendMessage("Задан размер взрыва файербола: "+ Integer.parseInt(args[3])+", базовый размер: 5");
-        }
-        if(eventM.containsKey("maxMobs")){
-            if(args.length>=4) config.set("fs.other.maxMobs", Integer.parseInt(args[3]));
-            sender.sendMessage("Установленно максимальное количество мобов: "+Integer.parseInt(args[3]));
         }
 
         try {

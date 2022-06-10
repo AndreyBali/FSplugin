@@ -6,7 +6,7 @@ import net.simple.forscore.plugin.armorstand.ArmorPose;
 import net.simple.forscore.plugin.armorstand.ArmorSpawn;
 import net.simple.forscore.plugin.command.FScommand;
 import net.simple.forscore.plugin.discordsrv.LinkEvent;
-import net.simple.forscore.plugin.event.Fireballspawn;
+//import net.simple.forscore.plugin.event.Fireballspawn;
 import net.simple.forscore.plugin.event.Other;
 import net.simple.forscore.plugin.raidfix.RaidFix;
 import org.bukkit.Bukkit;
@@ -42,10 +42,10 @@ public final class Main extends JavaPlugin {
         Instance = this;
         new FScommand(this);
 
-        // FireBall
-        Fireballspawn fireballspawn = new Fireballspawn();
-        fireballspawn.setPlugin(this);
-        fireballspawn.loadConfig();
+//        // FireBall
+//        Fireballspawn fireballspawn = new Fireballspawn();
+//        fireballspawn.setPlugin(this);
+//        fireballspawn.loadConfig();
         //Other
         File config_file = new File(this.getDataFolder() + File.separator + "/event/config.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(config_file);

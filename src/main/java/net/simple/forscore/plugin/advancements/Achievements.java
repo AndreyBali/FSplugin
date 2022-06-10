@@ -90,49 +90,7 @@ public class Achievements implements Listener{
         advArray[28] = "colosstitan";
         return advArray;
     }
-    public static Boolean fe;
 
-    @EventHandler
-    public void playerPortal(PlayerPortalEvent event){
-        if(event.getPlayer().getLocation().getWorld().getName().equalsIgnoreCase("world")) event.setCancelled(true);
-    }
-    @EventHandler
-    public void playerOpenEC(PlayerInteractEvent event){
-        if(event.getClickedBlock() == null) return;
-        if(event.getClickedBlock().getType().equals(Material.ENDER_CHEST)) event.getPlayer().breakBlock(event.getClickedBlock());
-    }
-    @EventHandler
-    public void fireballExplosion(ExplosionPrimeEvent event){
-        if(fe == null){
-            File config_file = new File(plugin.getDataFolder() + File.separator + "/event/config.yml");
-            FileConfiguration config = YamlConfiguration.loadConfiguration(config_file);
-            fe = config.getBoolean("fs.fireRain");
-        }
-        if(!fe) return;
-        Entity ent = event.getEntity();
-        if (ent instanceof Fireball) {
-            Location center = ent.getLocation();
-            int radius = 2;
-            for (int Y = -radius; Y < radius; Y++)
-                for (int X = -radius; X < radius; X++)
-                    for (int Z = -radius; Z < radius; Z++)
-                        if (Math.sqrt((X * X) + (Y * Y) + (Z * Z)) <= radius) {
-                            final Block block = center.getWorld().getBlockAt(X + center.getBlockX(), Y + center.getBlockY(), Z + center.getBlockZ());
-                            if (block.getType().equals(Material.OBSIDIAN)) block.setType(Material.COBBLESTONE);
-                            if (block.getType().equals(Material.CRYING_OBSIDIAN)) block.setType(Material.COBBLESTONE);
-                            if (block.getType().equals(Material.ANCIENT_DEBRIS)) block.setType(Material.OBSIDIAN);
-                            if (block.getType().equals(Material.NETHERITE_BLOCK)) block.setType(Material.ANCIENT_DEBRIS);
-                        }
-        }
-
-    }
-
-
-    @EventHandler
-    public void plDeEv(PlayerDeathEvent event){
-        if(event.getEntity().isOp()) event.getEntity().setGameMode(GameMode.SPECTATOR);
-        else Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "ban " + event.getEntity().getName()+" Был похищен Кроносом");
-    }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
