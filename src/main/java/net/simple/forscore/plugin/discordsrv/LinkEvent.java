@@ -25,4 +25,5 @@ public class LinkEvent {
             plugin.getLogger().warning("Can't modify nickname, member has a high role or administrator right.");
         }
     }
+
 }

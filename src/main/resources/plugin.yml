@@ -1,12 +1,15 @@
 name: SimpleFSplugin
 version: '1.0'
 main: net.simple.forscore.plugin.Main
-api-version: 1.18
+api-version: 1.19
 authors: [ KessPenGames, AndreyBali ]
 description: Плагин для ForScore
 website: https://forscore.ru/
-softdepend: [ Chatty, DiscordSRV ]
+softdepend: [ DiscordSRV ]
 commands:
   fs:
     description: Use /fs [fixadv, cooldown, progress, volcano]
     usage: /fs [fixadv, cooldown, progress, volcano]
+permissions:
+  fs.customModelData:
+    description: Allows you to use /fs customModelData command
